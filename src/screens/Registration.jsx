@@ -54,10 +54,11 @@ export default function Registration({ navigation }) {
     }
   };
 
-  const message = showMessage({
-    message: { error },
-    type: "danger",
-  });
+  const message = () =>
+    showMessage({
+      message: "Error",
+      type: "danger",
+    });
 
   let content = null;
 
@@ -75,7 +76,7 @@ export default function Registration({ navigation }) {
       <SafeAreaView
         style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
       >
-        <Text>{message}</Text>
+        <Text>{error}</Text>
       </SafeAreaView>
     );
   }
