@@ -6,6 +6,7 @@ import {
   View,
   TextInput,
   Pressable,
+  ScrollView,
 } from "react-native";
 import React, { useState } from "react";
 import Input from "../components/Input";
@@ -16,46 +17,48 @@ export default function Registration({ navigation }) {
   const [gender, setGender] = useState(null);
   return (
     <SafeAreaView style={styles.container}>
-      <Image source={require("../../assets/login.png")} style={styles.img} />
-      <View style={styles.inputContainer}>
-        <Text style={styles.heading}>Registration</Text>
-        <Input placeholder={"Full Name"} />
-        <Input placeholder={"Email Address"} />
-        <Input placeholder={"Password"} secureTextEntry />
-        <Input placeholder={"Age"} />
-        {radioOption.map((option) => {
-          const selected = option === gender;
-          return (
-            <Pressable
-              style={styles.radioContainer}
-              key={option}
-              onPress={() => setGender(option)}
-            >
-              <View
-                style={[
-                  styles.outerCircle,
-                  selected && styles.selectedOuterCircle,
-                ]}
+      <ScrollView>
+        <Image source={require("../../assets/login.png")} style={styles.img} />
+        <View style={styles.inputContainer}>
+          <Text style={styles.heading}>Registration</Text>
+          <Input placeholder={"Full Name"} />
+          <Input placeholder={"Email Address"} />
+          <Input placeholder={"Password"} secureTextEntry />
+          <Input placeholder={"Age"} />
+          {radioOption.map((option) => {
+            const selected = option === gender;
+            return (
+              <Pressable
+                style={styles.radioContainer}
+                key={option}
+                onPress={() => setGender(option)}
               >
                 <View
                   style={[
-                    styles.innerCircle,
-                    selected && styles.selectedInnerCircle,
+                    styles.outerCircle,
+                    selected && styles.selectedOuterCircle,
                   ]}
-                ></View>
-              </View>
-              <Text style={styles.radioText}>{option}</Text>
-            </Pressable>
-          );
-        })}
-        <Text style={styles.routText}>
-          Already have an account?{" "}
-          <Text style={{ color: "orange" }}>Login</Text>
-        </Text>
-        <View style={{ marginVertical: 40 }}>
-          <Button title={"Submit"} />
+                >
+                  <View
+                    style={[
+                      styles.innerCircle,
+                      selected && styles.selectedInnerCircle,
+                    ]}
+                  ></View>
+                </View>
+                <Text style={styles.radioText}>{option}</Text>
+              </Pressable>
+            );
+          })}
+          <Text style={styles.routText}>
+            Already have an account?{" "}
+            <Text style={{ color: "orange" }}>Login</Text>
+          </Text>
+          <View style={{ marginVertical: 10 }}>
+            <Button title={"Submit"} />
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
