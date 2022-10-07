@@ -105,6 +105,7 @@ export default function Registration({ navigation }) {
               onChangeText={(text) => setPassword(text)}
             />
             <Input placeholder={"Age"} onChangeText={(text) => setAge(text)} />
+            <Text style={{ fontSize: 18, margin: 5 }}>Select Gender</Text>
             {radioOption.map((option) => {
               const selected = option === gender;
               return (
