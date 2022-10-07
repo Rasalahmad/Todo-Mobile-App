@@ -6,6 +6,9 @@ import Create from "./src/screens/Create";
 import Update from "./src/screens/Update";
 import Registration from "./src/screens/Registration";
 import Login from "./src/screens/Login";
+import { firebaseConfig } from "./firebase.config";
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
 
 const Stack = createStackNavigator();
 
@@ -16,6 +19,9 @@ const Stack = createStackNavigator();
 //     backgroundColor: "#fff",
 //   },
 // };
+
+const app = initializeApp(firebaseConfig);
+export const db = getFirestore(app);
 
 export default function App() {
   const user = false;

@@ -7,65 +7,147 @@ import {
   TextInput,
   Pressable,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
 import Input from "../components/Input";
 import Button from "../components/Button";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../../App";
+import { showMessage } from "react-native-flash-message";
 
 export default function Registration({ navigation }) {
   const radioOption = ["Male", "Female"];
   const [gender, setGender] = useState(null);
-  return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView>
-        <Image source={require("../../assets/login.png")} style={styles.img} />
-        <View style={styles.inputContainer}>
-          <Text style={styles.heading}>Registration</Text>
-          <Input placeholder={"Full Name"} />
-          <Input placeholder={"Email Address"} />
-          <Input placeholder={"Password"} secureTextEntry />
-          <Input placeholder={"Age"} />
-          {radioOption.map((option) => {
-            const selected = option === gender;
-            return (
-              <Pressable
-                style={styles.radioContainer}
-                key={option}
-                onPress={() => setGender(option)}
-              >
-                <View
-                  style={[
-                    styles.outerCircle,
-                    selected && styles.selectedOuterCircle,
-                  ]}
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [age, setAge] = useState("");
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const auth = getAuth();
+
+  const registration = async () => {
+    setLoading(true);
+    try {
+      const result = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log("result", result);
+
+      await addDoc(collection(db, "users"), {
+        name,
+        email,
+        gender,
+        age,
+        uid: result.user.uid,
+      });
+      setLoading(false);
+      navigation.navigate("Login");
+    } catch (err) {
+      setLoading(false);
+      setError(err);
+    }
+  };
+
+  const message = showMessage({
+    message: { error },
+    type: "danger",
+  });
+
+  let content = null;
+
+  if (loading) {
+    content = (
+      <SafeAreaView
+        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+      >
+        <ActivityIndicator size="large" color={"blue"} />
+      </SafeAreaView>
+    );
+  }
+  if (!loading && error) {
+    content = (
+      <SafeAreaView
+        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+      >
+        <Text>{message}</Text>
+      </SafeAreaView>
+    );
+  }
+  if (!loading && !error) {
+    content = (
+      <SafeAreaView style={styles.container}>
+        <ScrollView>
+          <Image
+            source={require("../../assets/login.png")}
+            style={styles.img}
+          />
+          <View style={styles.inputContainer}>
+            <Text style={styles.heading}>Registration</Text>
+            <Input
+              placeholder={"Full Name"}
+              onChangeText={(text) => setName(text)}
+            />
+            <Input
+              placeholder={"Email Address"}
+              autoCapitalize={"none"}
+              onChangeText={(text) => setEmail(text)}
+            />
+            <Input
+              placeholder={"Password"}
+              secureTextEntry
+              onChangeText={(text) => setPassword(text)}
+            />
+            <Input placeholder={"Age"} onChangeText={(text) => setAge(text)} />
+            {radioOption.map((option) => {
+              const selected = option === gender;
+              return (
+                <Pressable
+                  style={styles.radioContainer}
+                  key={option}
+                  onPress={() => setGender(option)}
                 >
                   <View
                     style={[
-                      styles.innerCircle,
-                      selected && styles.selectedInnerCircle,
+                      styles.outerCircle,
+                      selected && styles.selectedOuterCircle,
                     ]}
-                  ></View>
-                </View>
-                <Text style={styles.radioText}>{option}</Text>
-              </Pressable>
-            );
-          })}
-          <Text style={styles.routText}>
-            Already have an account?{" "}
-            <Text
-              style={{ color: "orange" }}
-              onPress={() => navigation.navigate("Login")}
-            >
-              Login
+                  >
+                    <View
+                      style={[
+                        styles.innerCircle,
+                        selected && styles.selectedInnerCircle,
+                      ]}
+                    ></View>
+                  </View>
+                  <Text style={styles.radioText}>{option}</Text>
+                </Pressable>
+              );
+            })}
+            <Text style={styles.routText}>
+              Already have an account?{" "}
+              <Text
+                style={{ color: "orange" }}
+                onPress={() => navigation.navigate("Login")}
+              >
+                Login
+              </Text>
             </Text>
-          </Text>
-          <View style={{ marginVertical: 10 }}>
-            <Button title={"Submit"} />
+            <View style={{ marginVertical: 10 }}>
+              <Button title={"Submit"} onPress={registration} />
+            </View>
           </View>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
+        </ScrollView>
+      </SafeAreaView>
+    );
+  }
+
+  return content;
 }
 
 const styles = StyleSheet.create({
