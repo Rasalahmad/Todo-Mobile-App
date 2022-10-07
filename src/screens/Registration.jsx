@@ -52,7 +52,12 @@ export default function Registration({ navigation }) {
           })}
           <Text style={styles.routText}>
             Already have an account?{" "}
-            <Text style={{ color: "orange" }}>Login</Text>
+            <Text
+              style={{ color: "orange" }}
+              onPress={() => navigation.navigate("Login")}
+            >
+              Login
+            </Text>
           </Text>
           <View style={{ marginVertical: 10 }}>
             <Button title={"Submit"} />

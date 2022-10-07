@@ -20,7 +20,12 @@ export default function Login({ navigation }) {
         <Input placeholder={"Password"} secureTextEntry />
         <Text style={styles.routText}>
           Don't have an account?{" "}
-          <Text style={{ color: "orange" }}>Registration</Text>
+          <Text
+            style={{ color: "orange" }}
+            onPress={() => navigation.navigate("Registration")}
+          >
+            Registration
+          </Text>
         </Text>
         <View style={{ marginVertical: 40 }}>
           <Button title={"Submit"} />
