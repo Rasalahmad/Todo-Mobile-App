@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, SafeAreaView, Pressable } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import React, { useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import Input from "../components/Input";
@@ -11,10 +18,12 @@ export default function Create({ navigation, route, user }) {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [color, setColor] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const colorOption = ["red", "green", "orange"];
 
   const handleSubmit = async () => {
+    setLoading(true);
     try {
       await addDoc(collection(db, "notes"), {
         title,
@@ -22,8 +31,10 @@ export default function Create({ navigation, route, user }) {
         color,
         uid: user && user.uid,
       });
+      setLoading(false);
       navigation.navigate("Home");
     } catch (err) {
+      setLoading(false);
       showMessage({
         message: "Something went wrong",
         type: "danger",
@@ -87,9 +98,17 @@ export default function Create({ navigation, route, user }) {
           );
         })}
       </View>
-      <View style={{ marginVertical: 40 }}>
-        <Button title={"Create"} onPress={handleSubmit} />
-      </View>
+      {loading ? (
+        <SafeAreaView
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ActivityIndicator size="large" color={"blue"} />
+        </SafeAreaView>
+      ) : (
+        <View style={{ marginVertical: 10 }}>
+          <Button title={"Create"} onPress={handleSubmit} />
+        </View>
+      )}
     </SafeAreaView>
   );
 }

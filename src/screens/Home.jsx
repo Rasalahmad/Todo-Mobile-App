@@ -8,7 +8,14 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "../../App";
 
 export default function Home({ navigation, route, user }) {
@@ -22,7 +29,7 @@ export default function Home({ navigation, route, user }) {
     const notesListSubscription = onSnapshot(q, (querySnapshot) => {
       const noteList = [];
       querySnapshot.forEach((doc) => {
-        noteList.push(doc.data());
+        noteList.push({ ...doc.data(), id: doc.id });
       });
       setNotes(noteList);
     });
@@ -30,9 +37,18 @@ export default function Home({ navigation, route, user }) {
   }, []);
 
   const renderItem = ({ item }) => {
-    const { title, desc, color } = item;
+    const { title, desc, color, id } = item;
+    const handleDelete = () => {
+      deleteDoc(doc(db, "notes", id));
+    };
     return (
-      <Pressable style={[styles.itemContainer, { backgroundColor: color }]}>
+      <Pressable
+        onPress={() => navigation.navigate("update", { item })}
+        style={[styles.itemContainer, { backgroundColor: color }]}
+      >
+        <Pressable style={styles.deleteBtn} onPress={handleDelete}>
+          <AntDesign name="delete" size={24} color="white" />
+        </Pressable>
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.description}>{desc}</Text>
       </Pressable>
@@ -86,5 +102,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#fff",
     marginTop: 8,
+  },
+  deleteBtn: {
+    position: "absolute",
+    alignSelf: "flex-end",
+    padding: 10,
+    zIndex: 2,
   },
 });
