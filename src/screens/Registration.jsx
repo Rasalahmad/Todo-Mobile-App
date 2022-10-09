@@ -16,6 +16,7 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../../App";
 import { showMessage } from "react-native-flash-message";
+import Error from "../components/Error";
 
 export default function Registration({ navigation }) {
   const radioOption = ["Male", "Female"];
@@ -24,37 +25,51 @@ export default function Registration({ navigation }) {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const auth = getAuth();
 
   const registration = async () => {
-    setLoading(true);
-    try {
-      const result = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      console.log("result", result);
+    if (name.trim() === "") {
+      setError(() => ({ nameError: "Name is required." }));
+    } else if (email.trim() === "") {
+      setError(() => ({ emailError: "Mail id is required." }));
+    } else if (password.length < 6) {
+      setError(() => ({
+        passwordError: "Password length must be at least 6.",
+      }));
+    } else if (age.trim() === "") {
+      setError(() => ({ ageError: "Age is required." }));
+    } else if (gender === null) {
+      setError(() => ({ genderError: "Gender is required." }));
+    } else {
+      setLoading(true);
+      try {
+        const result = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        console.log("result", result);
 
-      await addDoc(collection(db, "users"), {
-        name,
-        email,
-        gender,
-        age,
-        uid: result.user.uid,
-      });
-      setLoading(false);
-      navigation.navigate("Login");
-    } catch (err) {
-      setLoading(false);
-      console.log(err);
-      showMessage({
-        message: "Something went wrong",
-        type: "danger",
-      });
+        await addDoc(collection(db, "users"), {
+          name,
+          email,
+          gender,
+          age,
+          uid: result.user.uid,
+        });
+        setLoading(false);
+        navigation.navigate("Login");
+      } catch (err) {
+        setLoading(false);
+        console.log(err);
+        showMessage({
+          message: "Something went wrong",
+          type: "danger",
+        });
+      }
     }
   };
 
@@ -83,17 +98,21 @@ export default function Registration({ navigation }) {
               placeholder={"Full Name"}
               onChangeText={(text) => setName(text)}
             />
+            {error.nameError && <Error error={error.nameError} />}
             <Input
               placeholder={"Email Address"}
               autoCapitalize={"none"}
               onChangeText={(text) => setEmail(text)}
             />
+            {error.emailError && <Error error={error.emailError} />}
             <Input
               placeholder={"Password"}
               secureTextEntry
               onChangeText={(text) => setPassword(text)}
             />
+            {error.passwordError && <Error error={error.passwordError} />}
             <Input placeholder={"Age"} onChangeText={(text) => setAge(text)} />
+            {error.ageError && <Error error={error.ageError} />}
             <Text style={{ fontSize: 18, margin: 5 }}>Select Gender</Text>
             {radioOption.map((option) => {
               const selected = option === gender;
@@ -120,6 +139,7 @@ export default function Registration({ navigation }) {
                 </Pressable>
               );
             })}
+            {error.genderError && <Error error={error.genderError} />}
             <Text style={styles.routText}>
               Already have an account?{" "}
               <Text

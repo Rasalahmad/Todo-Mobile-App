@@ -69,6 +69,7 @@ export default function Home({ navigation, route, user }) {
           renderItem={renderItem}
           keyExtractor={(item) => item.title}
           contentContainerStyle={{ padding: 20 }}
+          showsVerticalScrollIndicator={false}
         />
       </View>
     </SafeAreaView>
@@ -78,6 +79,7 @@ export default function Home({ navigation, route, user }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginBottom: 50,
   },
   totalView: {},
   mainDiv: {

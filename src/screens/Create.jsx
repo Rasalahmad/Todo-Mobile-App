@@ -13,32 +13,42 @@ import Button from "../components/Button";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../../App";
 import { showMessage } from "react-native-flash-message";
+import Error from "../components/Error";
 
 export default function Create({ navigation, route, user }) {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [color, setColor] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   const colorOption = ["red", "green", "orange"];
 
   const handleSubmit = async () => {
-    setLoading(true);
-    try {
-      await addDoc(collection(db, "notes"), {
-        title,
-        desc,
-        color,
-        uid: user && user.uid,
-      });
-      setLoading(false);
-      navigation.navigate("Home");
-    } catch (err) {
-      setLoading(false);
-      showMessage({
-        message: "Something went wrong",
-        type: "danger",
-      });
+    if (title.trim() === "") {
+      setError(() => ({ titleError: "title is required." }));
+    } else if (desc.trim() === "") {
+      setError(() => ({ descError: "Description is required." }));
+    } else if (color === null) {
+      setError(() => ({ colorError: "Color is required." }));
+    } else {
+      setLoading(true);
+      try {
+        await addDoc(collection(db, "notes"), {
+          title,
+          desc,
+          color,
+          uid: user && user.uid,
+        });
+        setLoading(false);
+        navigation.navigate("Home");
+      } catch (err) {
+        setLoading(false);
+        showMessage({
+          message: "Something went wrong",
+          type: "danger",
+        });
+      }
     }
   };
   return (
@@ -56,12 +66,14 @@ export default function Create({ navigation, route, user }) {
       </View>
       <View style={styles.inputs}>
         <Input placeholder={"title"} onChangeText={(text) => setTitle(text)} />
+        {error.titleError && <Error error={error.titleError} />}
         <Input
           placeholder={"description"}
           onChangeText={(text) => setDesc(text)}
           multiline={true}
           value={desc}
         />
+        {error.descError && <Error error={error.descError} />}
         <Text style={styles.colorText}>Select Color</Text>
         {colorOption.map((option) => {
           const selected = option === color;
@@ -97,6 +109,7 @@ export default function Create({ navigation, route, user }) {
             </Pressable>
           );
         })}
+        {error.colorError && <Error error={error.colorError} />}
       </View>
       {loading ? (
         <SafeAreaView
