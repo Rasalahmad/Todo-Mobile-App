@@ -6,6 +6,8 @@ export default function Input({
   secureTextEntry,
   autoCapitalize,
   onChangeText,
+  multiline,
+  value,
 }) {
   return (
     <TextInput
@@ -14,7 +16,10 @@ export default function Input({
       secureTextEntry={secureTextEntry}
       autoCapitalize={autoCapitalize}
       onChangeText={onChangeText}
-    />
+      multiline={multiline}
+    >
+      <Text>{value}</Text>
+    </TextInput>
   );
 }
 
@@ -25,5 +30,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     borderBottomColor: "gray",
     marginVertical: 15,
+    lineHeight: 28,
   },
 });
