@@ -50,15 +50,13 @@ export default function Registration({ navigation }) {
       navigation.navigate("Login");
     } catch (err) {
       setLoading(false);
-      setError(err);
+      console.log(err);
+      showMessage({
+        message: "Something went wrong",
+        type: "danger",
+      });
     }
   };
-
-  const message = () =>
-    showMessage({
-      message: "Error",
-      type: "danger",
-    });
 
   let content = null;
 
@@ -71,16 +69,7 @@ export default function Registration({ navigation }) {
       </SafeAreaView>
     );
   }
-  if (!loading && error) {
-    content = (
-      <SafeAreaView
-        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-      >
-        <Text>{error}</Text>
-      </SafeAreaView>
-    );
-  }
-  if (!loading && !error) {
+  if (!loading) {
     content = (
       <SafeAreaView style={styles.container}>
         <ScrollView>
@@ -141,7 +130,7 @@ export default function Registration({ navigation }) {
               </Text>
             </Text>
             <View style={{ marginVertical: 10 }}>
-              <Button title={"Submit"} onPress={registration} />
+              <Button title={"Sign up"} onPress={registration} />
             </View>
           </View>
         </ScrollView>

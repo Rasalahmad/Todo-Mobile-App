@@ -9,6 +9,9 @@ import Login from "./src/screens/Login";
 import { firebaseConfig } from "./firebase.config";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useEffect, useState } from "react";
+import FlashMessage from "react-native-flash-message";
 
 const Stack = createStackNavigator();
 
@@ -24,7 +27,18 @@ const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 
 export default function App() {
-  const user = false;
+  const [user, setUser] = useState(null);
+  const auth = getAuth();
+  useEffect(() => {
+    const authSubscription = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+      } else {
+        setUser(null);
+      }
+    });
+    return authSubscription;
+  }, []);
 
   return (
     <>
@@ -53,6 +67,7 @@ export default function App() {
             </>
           )}
         </Stack.Navigator>
+        <FlashMessage position={"top"} />
       </NavigationContainer>
       <StatusBar style="light" />
     </>
