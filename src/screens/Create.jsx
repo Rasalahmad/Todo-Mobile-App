@@ -1,14 +1,35 @@
-import { StyleSheet, Text, View, SafeAreaView } from "react-native";
+import { StyleSheet, Text, View, SafeAreaView, Pressable } from "react-native";
 import React, { useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import Input from "../components/Input";
 import Button from "../components/Button";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../../App";
+import { showMessage } from "react-native-flash-message";
 
-export default function Create() {
+export default function Create({ navigation, route, user }) {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
+  const [color, setColor] = useState(null);
 
-  const handleSubmit = () => {};
+  const colorOption = ["red", "green", "orange"];
+
+  const handleSubmit = async () => {
+    try {
+      await addDoc(collection(db, "notes"), {
+        title,
+        desc,
+        color,
+        uid: user && user.uid,
+      });
+      navigation.navigate("Home");
+    } catch (err) {
+      showMessage({
+        message: "Something went wrong",
+        type: "danger",
+      });
+    }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.secondaryContainer}>
@@ -30,6 +51,41 @@ export default function Create() {
           multiline={true}
           value={desc}
         />
+        <Text style={styles.colorText}>Select Color</Text>
+        {colorOption.map((option) => {
+          const selected = option === color;
+          return (
+            <Pressable
+              style={styles.radioContainer}
+              key={option}
+              onPress={() => setColor(option)}
+            >
+              <View
+                style={[
+                  styles.outerCircle,
+                  selected && styles.selectedOuterCircle,
+                ]}
+              >
+                <View
+                  style={[
+                    styles.innerCircle,
+                    selected && styles.selectedInnerCircle,
+                  ]}
+                ></View>
+              </View>
+              <Text
+                style={[
+                  styles.radioText,
+                  option === "red" && { color: "red" },
+                  option === "green" && { color: "green" },
+                  option === "orange" && { color: "orange" },
+                ]}
+              >
+                {option.charAt(0).toUpperCase() + option.slice(1)}
+              </Text>
+            </Pressable>
+          );
+        })}
       </View>
       <View style={{ marginVertical: 40 }}>
         <Button title={"Create"} onPress={handleSubmit} />
@@ -56,6 +112,44 @@ const styles = StyleSheet.create({
   },
   inputs: {
     marginHorizontal: 10,
-    marginVertical: 50,
+    marginVertical: 60,
+  },
+  colorText: {
+    margin: 10,
+    fontSize: 18,
+  },
+  radioContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: 10,
+    marginVertical: 5,
+  },
+  outerCircle: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    borderWidth: 0.5,
+    alignItems: "center",
+    borderColor: "#cfcfcf",
+    justifyContent: "center",
+  },
+  innerCircle: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    borderWidth: 0.5,
+    borderColor: "#cfcfcf",
+  },
+  radioText: {
+    marginTop: 10,
+    fontSize: 16,
+    marginLeft: 10,
+  },
+  selectedOuterCircle: {
+    borderColor: "orange",
+  },
+  selectedInnerCircle: {
+    borderColor: "orange",
+    backgroundColor: "orange",
   },
 });

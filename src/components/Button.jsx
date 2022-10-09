@@ -13,7 +13,8 @@ const styles = StyleSheet.create({
   myBtn: {
     textAlign: "center",
     paddingTop: 12,
-    width: "100%",
+    width: 150,
+    alignSelf: "center",
     paddingBottom: 5,
     borderRadius: 20,
     backgroundColor: "orange",

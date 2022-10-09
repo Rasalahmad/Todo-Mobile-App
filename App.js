@@ -59,7 +59,7 @@ export default function App() {
                 {(props) => <Home {...props} />}
               </Stack.Screen>
               <Stack.Screen name="Create">
-                {(props) => <Create {...props} />}
+                {(props) => <Create {...props} user={user} />}
               </Stack.Screen>
               <Stack.Screen name="update">
                 {(props) => <Update {...props} />}
