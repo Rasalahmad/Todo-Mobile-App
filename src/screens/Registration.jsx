@@ -62,6 +62,10 @@ export default function Registration({ navigation }) {
         });
         setLoading(false);
         navigation.navigate("Home");
+        showMessage({
+          message: "Registration Successful",
+          type: "success",
+        });
       } catch (error) {
         const str = error.message.split(" ")[2].split("/")[1];
         const errorMessage = str.substring(0, str.length - 2);

@@ -34,6 +34,10 @@ export default function Login({ navigation }) {
         if (result.user.uid) {
           setLoading(false);
           navigation.navigate("Home");
+          showMessage({
+            message: "Login Successfully",
+            type: "success",
+          });
         }
       } catch (error) {
         const str = error.message.split(" ")[2].split("/")[1];
