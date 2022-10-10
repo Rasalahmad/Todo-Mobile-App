@@ -160,6 +160,10 @@ export default function Home({ navigation, route, user }) {
           <SafeAreaView style={{ position: "relative", top: 280 }}>
             <ActivityIndicator size="large" color={"blue"} />
           </SafeAreaView>
+        ) : notes.length === 0 ? (
+          <SafeAreaView style={{ position: "relative", top: 280 }}>
+            <Text style={{ textAlign: "center" }}>No Notes Found</Text>
+          </SafeAreaView>
         ) : (
           <FlatList
             data={notes}

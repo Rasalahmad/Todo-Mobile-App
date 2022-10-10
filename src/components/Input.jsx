@@ -8,6 +8,7 @@ export default function Input({
   onChangeText,
   multiline,
   value,
+  keyboardType,
 }) {
   return (
     <TextInput
@@ -17,6 +18,7 @@ export default function Input({
       autoCapitalize={autoCapitalize}
       onChangeText={onChangeText}
       multiline={multiline}
+      keyboardType={keyboardType}
     >
       <Text>{value}</Text>
     </TextInput>

@@ -61,12 +61,13 @@ export default function Registration({ navigation }) {
           uid: result.user.uid,
         });
         setLoading(false);
-        navigation.navigate("Login");
-      } catch (err) {
+        navigation.navigate("Home");
+      } catch (error) {
+        const str = error.message.split(" ")[2].split("/")[1];
+        const errorMessage = str.substring(0, str.length - 2);
         setLoading(false);
-        console.log(err);
         showMessage({
-          message: "Something went wrong",
+          message: errorMessage,
           type: "danger",
         });
       }
@@ -94,6 +95,7 @@ export default function Registration({ navigation }) {
           <Input
             placeholder={"Full Name"}
             onChangeText={(text) => setName(text)}
+            autoCapitalize={"words"}
           />
           {error.nameError && <Error error={error.nameError} />}
           <Input
@@ -108,7 +110,11 @@ export default function Registration({ navigation }) {
             onChangeText={(text) => setPassword(text)}
           />
           {error.passwordError && <Error error={error.passwordError} />}
-          <Input placeholder={"Age"} onChangeText={(text) => setAge(text)} />
+          <Input
+            placeholder={"Age"}
+            keyboardType="numeric"
+            onChangeText={(text) => setAge(text)}
+          />
           {error.ageError && <Error error={error.ageError} />}
           <Text style={{ fontSize: 18, margin: 5 }}>Select Gender</Text>
           {radioOption.map((option) => {
