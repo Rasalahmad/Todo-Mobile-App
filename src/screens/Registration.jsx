@@ -75,90 +75,97 @@ export default function Registration({ navigation }) {
 
   let content = null;
 
-  if (loading) {
-    content = (
-      <SafeAreaView
-        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-      >
-        <ActivityIndicator size="large" color={"blue"} />
-      </SafeAreaView>
-    );
-  }
-  if (!loading) {
-    content = (
-      <SafeAreaView style={styles.container}>
-        <ScrollView>
-          <Image
-            source={require("../../assets/login.png")}
-            style={styles.img}
+  // if (loading) {
+  //   content = (
+  //     <SafeAreaView
+  //       style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+  //     >
+  //       <ActivityIndicator size="large" color={"blue"} />
+  //     </SafeAreaView>
+  //   );
+  // }
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <ScrollView>
+        <Image source={require("../../assets/login.png")} style={styles.img} />
+        <View style={styles.inputContainer}>
+          <Text style={styles.heading}>Registration</Text>
+          <Input
+            placeholder={"Full Name"}
+            onChangeText={(text) => setName(text)}
           />
-          <View style={styles.inputContainer}>
-            <Text style={styles.heading}>Registration</Text>
-            <Input
-              placeholder={"Full Name"}
-              onChangeText={(text) => setName(text)}
-            />
-            {error.nameError && <Error error={error.nameError} />}
-            <Input
-              placeholder={"Email Address"}
-              autoCapitalize={"none"}
-              onChangeText={(text) => setEmail(text)}
-            />
-            {error.emailError && <Error error={error.emailError} />}
-            <Input
-              placeholder={"Password"}
-              secureTextEntry
-              onChangeText={(text) => setPassword(text)}
-            />
-            {error.passwordError && <Error error={error.passwordError} />}
-            <Input placeholder={"Age"} onChangeText={(text) => setAge(text)} />
-            {error.ageError && <Error error={error.ageError} />}
-            <Text style={{ fontSize: 18, margin: 5 }}>Select Gender</Text>
-            {radioOption.map((option) => {
-              const selected = option === gender;
-              return (
-                <Pressable
-                  style={styles.radioContainer}
-                  key={option}
-                  onPress={() => setGender(option)}
+          {error.nameError && <Error error={error.nameError} />}
+          <Input
+            placeholder={"Email Address"}
+            autoCapitalize={"none"}
+            onChangeText={(text) => setEmail(text)}
+          />
+          {error.emailError && <Error error={error.emailError} />}
+          <Input
+            placeholder={"Password"}
+            secureTextEntry
+            onChangeText={(text) => setPassword(text)}
+          />
+          {error.passwordError && <Error error={error.passwordError} />}
+          <Input placeholder={"Age"} onChangeText={(text) => setAge(text)} />
+          {error.ageError && <Error error={error.ageError} />}
+          <Text style={{ fontSize: 18, margin: 5 }}>Select Gender</Text>
+          {radioOption.map((option) => {
+            const selected = option === gender;
+            return (
+              <Pressable
+                style={styles.radioContainer}
+                key={option}
+                onPress={() => setGender(option)}
+              >
+                <View
+                  style={[
+                    styles.outerCircle,
+                    selected && styles.selectedOuterCircle,
+                  ]}
                 >
                   <View
                     style={[
-                      styles.outerCircle,
-                      selected && styles.selectedOuterCircle,
+                      styles.innerCircle,
+                      selected && styles.selectedInnerCircle,
                     ]}
-                  >
-                    <View
-                      style={[
-                        styles.innerCircle,
-                        selected && styles.selectedInnerCircle,
-                      ]}
-                    ></View>
-                  </View>
-                  <Text style={styles.radioText}>{option}</Text>
-                </Pressable>
-              );
-            })}
-            {error.genderError && <Error error={error.genderError} />}
-            <Text style={styles.routText}>
-              Already have an account?{" "}
-              <Text
-                style={{ color: "orange" }}
-                onPress={() => navigation.navigate("Login")}
-              >
-                Login
-              </Text>
+                  ></View>
+                </View>
+                <Text style={styles.radioText}>{option}</Text>
+              </Pressable>
+            );
+          })}
+          {error.genderError && <Error error={error.genderError} />}
+          <Text style={styles.routText}>
+            Already have an account?{" "}
+            <Text
+              style={{ color: "orange" }}
+              onPress={() => navigation.navigate("Login")}
+            >
+              Login
             </Text>
+          </Text>
+          {loading ? (
+            <SafeAreaView
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                marginVertical: 10,
+              }}
+            >
+              <ActivityIndicator size="large" color={"blue"} />
+            </SafeAreaView>
+          ) : (
             <View style={{ marginVertical: 10 }}>
               <Button title={"Sign up"} onPress={registration} />
             </View>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    );
-  }
-
-  return content;
+          )}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({

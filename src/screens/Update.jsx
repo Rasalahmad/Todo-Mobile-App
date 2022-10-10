@@ -7,7 +7,6 @@ import {
   ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
-import { AntDesign } from "@expo/vector-icons";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import { doc, updateDoc } from "firebase/firestore";
