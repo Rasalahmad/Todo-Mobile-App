@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
   deleteBtn: {
     position: "absolute",
     alignSelf: "flex-end",
-    padding: 10,
+    padding: 5,
     zIndex: 2,
   },
   avatar: {

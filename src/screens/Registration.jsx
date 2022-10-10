@@ -17,6 +17,7 @@ import { addDoc, collection } from "firebase/firestore";
 import { db } from "../../App";
 import { showMessage } from "react-native-flash-message";
 import Error from "../components/Error";
+import EyePassword from "../components/EyePassword";
 
 export default function Registration({ navigation }) {
   const radioOption = ["Male", "Female"];
@@ -108,11 +109,7 @@ export default function Registration({ navigation }) {
             onChangeText={(text) => setEmail(text)}
           />
           {error.emailError && <Error error={error.emailError} />}
-          <Input
-            placeholder={"Password"}
-            secureTextEntry
-            onChangeText={(text) => setPassword(text)}
-          />
+          <EyePassword onChangeText={(text) => setPassword(text)} />
           {error.passwordError && <Error error={error.passwordError} />}
           <Input
             placeholder={"Age"}
