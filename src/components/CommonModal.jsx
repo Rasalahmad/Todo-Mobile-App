@@ -1,6 +1,7 @@
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { AntDesign } from "@expo/vector-icons";
+import { Gravatar } from "react-native-gravatar";
 
 export default function CommonModal({
   modalVisible,
@@ -26,9 +27,19 @@ export default function CommonModal({
           >
             <AntDesign name="close" size={24} color="black" />
           </Pressable>
-          <Text style={styles.modalText}>Name : {users[0]?.name}</Text>
-          <Text style={styles.modalText}>Age :{users[0]?.age}</Text>
-          <Text style={styles.modalText}>Gender : {users[0]?.gender}</Text>
+          <Gravatar
+            options={{
+              email: users[0]?.email,
+              parameters: { size: "200", d: "mm" },
+              secure: true,
+            }}
+            style={styles.avatar}
+          />
+          <View style={styles.modalText}>
+            <Text>Name : {users[0]?.name}</Text>
+            <Text>Age :{users[0]?.age}</Text>
+            <Text>Gender : {users[0]?.gender}</Text>
+          </View>
           <Pressable
             style={[styles.button, styles.buttonClose]}
             onPress={handleLogout}
@@ -77,11 +88,18 @@ const styles = StyleSheet.create({
   },
   modalText: {
     marginBottom: 15,
-    // textAlign: "center",
+    alignSelf: "center",
   },
   closeBtn: {
     position: "absolute",
     right: 0,
     padding: 20,
+  },
+  avatar: {
+    height: 100,
+    width: 100,
+    borderRadius: 50,
+    alignSelf: "center",
+    marginBottom: 20,
   },
 });

@@ -23,6 +23,7 @@ import { db } from "../../App";
 import { showMessage } from "react-native-flash-message";
 import { getAuth, signOut } from "firebase/auth";
 import CommonModal from "../components/CommonModal";
+import { Gravatar } from "react-native-gravatar";
 
 export default function Home({ navigation, route, user }) {
   const [notes, setNotes] = useState([]);
@@ -123,9 +124,13 @@ export default function Home({ navigation, route, user }) {
       <View style={styles.totalView}>
         <View style={styles.mainDiv}>
           <Pressable onPress={() => setModalVisible(true)}>
-            <Image
+            <Gravatar
+              options={{
+                email: users[0]?.email,
+                parameters: { size: "200", d: "mm" },
+                secure: true,
+              }}
               style={styles.avatar}
-              source={require("../../assets/avatar.png")}
             />
           </Pressable>
           <Text style={styles.heading}>My Notes</Text>

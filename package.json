@@ -19,6 +19,7 @@
     "react-native": "0.69.6",
     "react-native-flash-message": "^0.3.1",
     "react-native-gesture-handler": "~2.5.0",
+    "react-native-gravatar": "^1.0.2",
     "react-native-safe-area-context": "4.3.1"
   },
   "devDependencies": {
