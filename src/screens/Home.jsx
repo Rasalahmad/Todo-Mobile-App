@@ -26,6 +26,7 @@ import { getAuth, signOut } from "firebase/auth";
 
 export default function Home({ navigation, route, user }) {
   const [notes, setNotes] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -49,10 +50,28 @@ export default function Home({ navigation, route, user }) {
     return notesListSubscription;
   }, []);
 
+  useEffect(() => {
+    setLoading(true);
+    const q = query(collection(db, "users"), where("email", "==", user.email));
+    const userListSubscription = onSnapshot(q, (querySnapshot) => {
+      const userList = [];
+      querySnapshot.forEach((doc) => {
+        userList.push({ ...doc.data(), id: doc.id });
+      });
+      setUsers(userList);
+      setLoading(false);
+    });
+    return userListSubscription;
+  }, []);
+
   const handleLogout = async () => {
     try {
       await signOut(auth);
       setModalVisible(!modalVisible);
+      showMessage({
+        message: "Logout successfully",
+        type: "success",
+      });
     } catch (err) {
       showMessage({
         message: "Something went wrong",
@@ -96,7 +115,7 @@ export default function Home({ navigation, route, user }) {
   return (
     <SafeAreaView style={styles.container}>
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
@@ -106,7 +125,15 @@ export default function Home({ navigation, route, user }) {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Hello World!</Text>
+            <Pressable
+              style={styles.closeBtn}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <AntDesign name="close" size={24} color="black" />
+            </Pressable>
+            <Text style={styles.modalText}>Name : {users[0]?.name}</Text>
+            <Text style={styles.modalText}>Age :{users[0]?.age}</Text>
+            <Text style={styles.modalText}>Gender : {users[0]?.gender}</Text>
             <Pressable
               style={[styles.button, styles.buttonClose]}
               onPress={handleLogout}
@@ -222,6 +249,11 @@ const styles = StyleSheet.create({
   },
   modalText: {
     marginBottom: 15,
-    textAlign: "center",
+    // textAlign: "center",
+  },
+  closeBtn: {
+    position: "absolute",
+    right: 0,
+    padding: 20,
   },
 });
