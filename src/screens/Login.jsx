@@ -4,7 +4,6 @@ import {
   Text,
   SafeAreaView,
   View,
-  TextInput,
   ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
@@ -13,12 +12,14 @@ import Button from "../components/Button";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { showMessage } from "react-native-flash-message";
 import Error from "../components/Error";
+import EyePassword from "../components/EyePassword";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+
   const auth = getAuth();
   const handleSubmit = async () => {
     if (email.trim() === "") {
@@ -62,11 +63,7 @@ export default function Login({ navigation }) {
           onChangeText={(text) => setEmail(text)}
         />
         {error.emailError && <Error error={error.emailError} />}
-        <Input
-          placeholder={"Password"}
-          secureTextEntry
-          onChangeText={(text) => setPassword(text)}
-        />
+        <EyePassword onChangeText={(text) => setPassword(text)} />
         {error.passwordError && <Error error={error.passwordError} />}
         <Text style={styles.routText}>
           Don't have an account?{" "}
