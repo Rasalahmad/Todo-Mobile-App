@@ -6,6 +6,7 @@ import {
   Pressable,
   FlatList,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
@@ -45,12 +46,21 @@ export default function Home({ navigation, route, user }) {
     const handleDelete = () => {
       deleteDoc(doc(db, "notes", id));
     };
+    const createTwoButtonAlert = () =>
+      Alert.alert("Delete Note", "Are you sure you want to delete the note?", [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        { text: "OK", onPress: handleDelete },
+      ]);
     return (
       <Pressable
         onPress={() => navigation.navigate("update", { item })}
         style={[styles.itemContainer, { backgroundColor: color }]}
       >
-        <Pressable style={styles.deleteBtn} onPress={handleDelete}>
+        <Pressable style={styles.deleteBtn} onPress={createTwoButtonAlert}>
           <AntDesign name="delete" size={24} color="white" />
         </Pressable>
         <Text style={styles.title}>{title}</Text>
