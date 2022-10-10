@@ -42,6 +42,10 @@ export default function Update({ navigation, route, user }) {
         });
         setLoading(false);
         navigation.navigate("Home");
+        showMessage({
+          message: "Note updated successfully",
+          type: "info",
+        });
       } catch (err) {
         setLoading(false);
         showMessage({

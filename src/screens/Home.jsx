@@ -19,6 +19,7 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../../App";
+import { showMessage } from "react-native-flash-message";
 
 export default function Home({ navigation, route, user }) {
   const [notes, setNotes] = useState([]);
@@ -45,6 +46,10 @@ export default function Home({ navigation, route, user }) {
     const { title, desc, color, id } = item;
     const handleDelete = () => {
       deleteDoc(doc(db, "notes", id));
+      showMessage({
+        message: "Note deleted successfully",
+        type: "danger",
+      });
     };
     const createTwoButtonAlert = () =>
       Alert.alert("Delete Note", "Are you sure you want to delete the note?", [

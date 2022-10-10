@@ -42,6 +42,10 @@ export default function Create({ navigation, route, user }) {
         });
         setLoading(false);
         navigation.navigate("Home");
+        showMessage({
+          message: "Note added successfully",
+          type: "success",
+        });
       } catch (err) {
         setLoading(false);
         showMessage({
