@@ -27,7 +27,7 @@ export default function Update({ navigation, route, user }) {
 
   const handleSubmit = async () => {
     if (title.trim() === "") {
-      setError(() => ({ titleError: "title is required." }));
+      setError(() => ({ titleError: "Title is required." }));
     } else if (desc.trim() === "") {
       setError(() => ({ descError: "Description is required." }));
     } else if (color === null) {
@@ -51,6 +51,19 @@ export default function Update({ navigation, route, user }) {
       }
     }
   };
+
+  let content = null;
+
+  if (loading) {
+    content = (
+      <SafeAreaView
+        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+      >
+        <ActivityIndicator size="large" color={"blue"} />
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.secondaryContainer}>

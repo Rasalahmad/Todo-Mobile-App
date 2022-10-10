@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   Pressable,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
@@ -20,11 +21,13 @@ import { db } from "../../App";
 
 export default function Home({ navigation, route, user }) {
   const [notes, setNotes] = useState([]);
+  const [loading, setLoading] = useState(false);
   const handlePress = () => {
     navigation.navigate("Create");
   };
 
   useEffect(() => {
+    setLoading(true);
     const q = query(collection(db, "notes"), where("uid", "==", user.uid));
     const notesListSubscription = onSnapshot(q, (querySnapshot) => {
       const noteList = [];
@@ -32,6 +35,7 @@ export default function Home({ navigation, route, user }) {
         noteList.push({ ...doc.data(), id: doc.id });
       });
       setNotes(noteList);
+      setLoading(false);
     });
     return notesListSubscription;
   }, []);
@@ -64,13 +68,19 @@ export default function Home({ navigation, route, user }) {
             <AntDesign name="pluscircleo" size={25} color="black" />
           </Pressable>
         </View>
-        <FlatList
-          data={notes}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.title}
-          contentContainerStyle={{ padding: 20 }}
-          showsVerticalScrollIndicator={false}
-        />
+        {loading ? (
+          <SafeAreaView style={{ position: "relative", top: 280 }}>
+            <ActivityIndicator size="large" color={"blue"} />
+          </SafeAreaView>
+        ) : (
+          <FlatList
+            data={notes}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.title}
+            contentContainerStyle={{ padding: 20 }}
+            showsVerticalScrollIndicator={false}
+          />
+        )}
       </View>
     </SafeAreaView>
   );

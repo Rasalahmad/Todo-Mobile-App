@@ -26,7 +26,7 @@ export default function Create({ navigation, route, user }) {
 
   const handleSubmit = async () => {
     if (title.trim() === "") {
-      setError(() => ({ titleError: "title is required." }));
+      setError(() => ({ titleError: "Title is required." }));
     } else if (desc.trim() === "") {
       setError(() => ({ descError: "Description is required." }));
     } else if (color === null) {
