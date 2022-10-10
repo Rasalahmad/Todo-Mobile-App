@@ -12,27 +12,38 @@ import Input from "../components/Input";
 import Button from "../components/Button";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { showMessage } from "react-native-flash-message";
+import Error from "../components/Error";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const auth = getAuth();
   const handleSubmit = async () => {
-    setLoading(true);
-    try {
-      const result = await signInWithEmailAndPassword(auth, email, password);
-      if (result.user.uid) {
+    if (email.trim() === "") {
+      setError(() => ({ emailError: "Email is required." }));
+    } else if (password.length < 6) {
+      setError(() => ({
+        passwordError: "Password length must be at least 6.",
+      }));
+    } else {
+      setLoading(true);
+      try {
+        const result = await signInWithEmailAndPassword(auth, email, password);
+        if (result.user.uid) {
+          setLoading(false);
+          navigation.navigate("Home");
+        }
+      } catch (error) {
+        const str = error.message.split(" ")[2].split("/")[1];
+        const errorMessage = str.substring(0, str.length - 2);
         setLoading(false);
-        navigation.navigate("Home");
+        showMessage({
+          message: errorMessage,
+          type: "danger",
+        });
       }
-    } catch (err) {
-      setLoading(false);
-      showMessage({
-        message: "Something went wrong",
-        type: "danger",
-      });
     }
   };
 
@@ -46,11 +57,13 @@ export default function Login({ navigation }) {
           autoCapitalize={"none"}
           onChangeText={(text) => setEmail(text)}
         />
+        {error.emailError && <Error error={error.emailError} />}
         <Input
           placeholder={"Password"}
           secureTextEntry
           onChangeText={(text) => setPassword(text)}
         />
+        {error.passwordError && <Error error={error.passwordError} />}
         <Text style={styles.routText}>
           Don't have an account?{" "}
           <Text
