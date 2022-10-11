@@ -18,6 +18,13 @@ import { db } from "../../App";
 import { showMessage } from "react-native-flash-message";
 import Error from "../components/Error";
 import EyePassword from "../components/EyePassword";
+import {
+  getStorage,
+  ref,
+  getDownloadURL,
+  uploadBytesResumable,
+} from "firebase/storage";
+import * as ImagePicker from "expo-image-picker";
 
 export default function Registration({ navigation }) {
   const radioOption = ["Male", "Female"];
@@ -28,6 +35,50 @@ export default function Registration({ navigation }) {
   const [age, setAge] = useState("");
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState(null);
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      const storageRef = ref(getStorage(), `${name + Date.now()}`);
+
+      const img = await fetch(result.uri);
+      const blob = await img.blob();
+
+      console.log("uploading image");
+      const uploadTask = uploadBytesResumable(storageRef, blob);
+
+      // Listen for state changes, errors, and completion of the upload.
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
+        },
+        (error) => {
+          console.log(error);
+        },
+        () => {
+          // Upload completed successfully, now we can get the download URL
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            console.log("File available at", downloadURL);
+            setImage(downloadURL);
+          });
+        }
+      );
+    }
+  };
 
   const auth = getAuth();
 
@@ -59,6 +110,7 @@ export default function Registration({ navigation }) {
           email,
           gender,
           age,
+          image,
           uid: result.user.uid,
         });
         setLoading(false);
@@ -153,6 +205,9 @@ export default function Registration({ navigation }) {
               Login
             </Text>
           </Text>
+          <Pressable onPress={pickImage}>
+            <Text>Upload Image</Text>
+          </Pressable>
           {loading ? (
             <SafeAreaView
               style={{

@@ -1,4 +1,4 @@
-import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { Gravatar } from "react-native-gravatar";
@@ -27,13 +27,19 @@ export default function CommonModal({
           >
             <AntDesign name="close" size={24} color="black" />
           </Pressable>
-          <Gravatar
+          {/* <Gravatar
             options={{
               email: users[0]?.email,
               parameters: { size: "200", d: "mm" },
               secure: true,
             }}
             style={styles.avatar}
+          /> */}
+          <Image
+            style={styles.avatar}
+            source={{
+              uri: users[0]?.image,
+            }}
           />
           <View style={styles.modalText}>
             <Text>Name : {users[0]?.name}</Text>
