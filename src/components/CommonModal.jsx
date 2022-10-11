@@ -79,12 +79,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#F194FF",
   },
   buttonClose: {
-    backgroundColor: "#2196F3",
+    backgroundColor: "orange",
   },
   textStyle: {
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
+    fontSize: 18,
   },
   modalText: {
     marginBottom: 15,
