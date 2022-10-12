@@ -2,6 +2,7 @@ import { Image, Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { Gravatar } from "react-native-gravatar";
+import Button from "./Button";
 
 export default function CommonModal({
   modalVisible,
@@ -35,22 +36,29 @@ export default function CommonModal({
             }}
             style={styles.avatar}
           /> */}
-          <Image
-            style={styles.avatar}
-            source={{
-              uri: users[0]?.image,
-            }}
-          />
+          {users[0]?.image ? (
+            <Image
+              style={styles.avatar}
+              source={{
+                uri: users[0]?.image,
+              }}
+            />
+          ) : (
+            <Image
+              style={styles.avatar}
+              source={require("../../assets/avatar.png")}
+            />
+          )}
           <View style={styles.modalText}>
             <Text>Name : {users[0]?.name}</Text>
             <Text>Age :{users[0]?.age}</Text>
             <Text>Gender : {users[0]?.gender}</Text>
           </View>
           <Pressable
-            style={[styles.button, styles.buttonClose]}
+            // style={[styles.button, styles.buttonClose]}
             onPress={handleLogout}
           >
-            <Text style={styles.textStyle}>Logout</Text>
+            <Button title={"Logout"} />
           </Pressable>
         </View>
       </View>

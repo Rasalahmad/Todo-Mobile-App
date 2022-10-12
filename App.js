@@ -6,12 +6,10 @@ import Create from "./src/screens/Create";
 import Update from "./src/screens/Update";
 import Registration from "./src/screens/Registration";
 import Login from "./src/screens/Login";
-import { firebaseConfig } from "./firebase.config";
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
 import FlashMessage from "react-native-flash-message";
+import { auth } from "./firebase.config";
 
 const Stack = createStackNavigator();
 
@@ -23,12 +21,8 @@ const Stack = createStackNavigator();
 //   },
 // };
 
-const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
-
 export default function App() {
   const [user, setUser] = useState(null);
-  const auth = getAuth();
   useEffect(() => {
     const authSubscription = onAuthStateChanged(auth, (user) => {
       if (user) {

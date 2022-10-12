@@ -12,12 +12,12 @@ import {
 import React, { useState } from "react";
 import Input from "../components/Input";
 import Button from "../components/Button";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { addDoc, collection } from "firebase/firestore";
-import { db } from "../../App";
 import { showMessage } from "react-native-flash-message";
 import Error from "../components/Error";
 import EyePassword from "../components/EyePassword";
+import { auth, db } from "../../firebase.config";
 import {
   getStorage,
   ref,
@@ -79,8 +79,6 @@ export default function Registration({ navigation }) {
       );
     }
   };
-
-  const auth = getAuth();
 
   const registration = async () => {
     if (name.trim() === "") {
@@ -196,6 +194,9 @@ export default function Registration({ navigation }) {
             );
           })}
           {error.genderError && <Error error={error.genderError} />}
+          <Pressable onPress={pickImage} style={{ margin: 10 }}>
+            {image ? <Text>Image Selected</Text> : <Text>Upload Image</Text>}
+          </Pressable>
           <Text style={styles.routText}>
             Already have an account?{" "}
             <Text
@@ -205,9 +206,6 @@ export default function Registration({ navigation }) {
               Login
             </Text>
           </Text>
-          <Pressable onPress={pickImage}>
-            <Text>Upload Image</Text>
-          </Pressable>
           {loading ? (
             <SafeAreaView
               style={{

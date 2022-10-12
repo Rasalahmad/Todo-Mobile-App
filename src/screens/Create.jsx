@@ -11,9 +11,9 @@ import { AntDesign } from "@expo/vector-icons";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import { addDoc, collection } from "firebase/firestore";
-import { db } from "../../App";
 import { showMessage } from "react-native-flash-message";
 import Error from "../components/Error";
+import { db } from "../../firebase.config";
 
 export default function Create({ navigation, route, user }) {
   const [title, setTitle] = useState("");

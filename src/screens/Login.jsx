@@ -9,10 +9,11 @@ import {
 import React, { useState } from "react";
 import Input from "../components/Input";
 import Button from "../components/Button";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { showMessage } from "react-native-flash-message";
 import Error from "../components/Error";
 import EyePassword from "../components/EyePassword";
+import { auth } from "../../firebase.config";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
@@ -20,7 +21,6 @@ export default function Login({ navigation }) {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const auth = getAuth();
   const handleSubmit = async () => {
     if (email.trim() === "") {
       setError(() => ({ emailError: "Email is required." }));

@@ -10,9 +10,9 @@ import React, { useState } from "react";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import { doc, updateDoc } from "firebase/firestore";
-import { db } from "../../App";
 import { showMessage } from "react-native-flash-message";
 import Error from "../components/Error";
+import { db } from "../../firebase.config";
 
 export default function Update({ navigation, route, user }) {
   const noteItem = route.params.item;

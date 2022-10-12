@@ -19,19 +19,16 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { db } from "../../App";
 import { showMessage } from "react-native-flash-message";
-import { getAuth, signOut } from "firebase/auth";
+import { signOut } from "firebase/auth";
 import CommonModal from "../components/CommonModal";
-import { Gravatar } from "react-native-gravatar";
+import { auth, db } from "../../firebase.config";
 
 export default function Home({ navigation, route, user }) {
   const [notes, setNotes] = useState([]);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-
-  const auth = getAuth();
 
   const handlePress = () => {
     navigation.navigate("Create");
@@ -124,14 +121,27 @@ export default function Home({ navigation, route, user }) {
       <View style={styles.totalView}>
         <View style={styles.mainDiv}>
           <Pressable onPress={() => setModalVisible(true)}>
-            <Gravatar
+            {/* <Gravatar
               options={{
                 email: users[0]?.email,
                 parameters: { size: "200", d: "mm" },
                 secure: true,
               }}
               style={styles.avatar}
-            />
+            /> */}
+            {users[0]?.image ? (
+              <Image
+                style={styles.avatar}
+                source={{
+                  uri: users[0]?.image,
+                }}
+              />
+            ) : (
+              <Image
+                style={styles.avatar}
+                source={require("../../assets/avatar.png")}
+              />
+            )}
           </Pressable>
           <Text style={styles.heading}>My Notes</Text>
           <Pressable onPress={handlePress}>
@@ -199,5 +209,7 @@ const styles = StyleSheet.create({
     height: 30,
     width: 30,
     borderRadius: 15,
+    borderWidth: 1,
+    borderColor: "orange",
   },
 });
