@@ -30,10 +30,10 @@ export default function CommonModal({
 }) {
   const radioOption = ["Male", "Female"];
   const [editMode, setEditMode] = useState(false);
-  const [name, setName] = useState(users[0]?.name && users[0]?.name);
-  const [age, setAge] = useState(users[0]?.age && users[0]?.age);
-  const [image, setImage] = useState(users[0]?.image ? users[0]?.image : null);
-  const [gender, setGender] = useState(users[0]?.gender && users[0]?.gender);
+  const [name, setName] = useState(users[0]?.name);
+  const [age, setAge] = useState(users[0]?.age);
+  const [image, setImage] = useState(users[0]?.image);
+  const [gender, setGender] = useState(users[0]?.gender);
   const [loading, setLoading] = useState(false);
 
   const closePopup = () => {
