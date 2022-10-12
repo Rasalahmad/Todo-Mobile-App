@@ -1,4 +1,12 @@
-import { Image, Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  Modal,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React, { useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import Button from "./Button";
@@ -22,15 +30,18 @@ export default function CommonModal({
 }) {
   const radioOption = ["Male", "Female"];
   const [editMode, setEditMode] = useState(false);
-  const [name, setName] = useState(users[0]?.name);
-  const [age, setAge] = useState(users[0]?.age);
-  const [image, setImage] = useState(null);
-  const [gender, setGender] = useState(users[0]?.gender);
+  const [name, setName] = useState(users[0]?.name && users[0]?.name);
+  const [age, setAge] = useState(users[0]?.age && users[0]?.age);
+  const [image, setImage] = useState(users[0]?.image ? users[0]?.image : null);
+  const [gender, setGender] = useState(users[0]?.gender && users[0]?.gender);
+  const [loading, setLoading] = useState(false);
 
   const closePopup = () => {
     setModalVisible(!modalVisible);
     setEditMode(false);
   };
+
+  console.log(name);
 
   // upload the image
   const uploadImage = async () => {
@@ -48,7 +59,6 @@ export default function CommonModal({
       const img = await fetch(result.uri);
       const blob = await img.blob();
 
-      console.log("uploading image");
       const uploadTask = uploadBytesResumable(storageRef, blob);
 
       // Listen for state changes, errors, and completion of the upload.
@@ -76,7 +86,7 @@ export default function CommonModal({
 
   // update user profile
   const handleUpdate = async () => {
-    console.log("first");
+    setLoading(true);
     try {
       const res = await updateDoc(
         doc(db, "users", users[0]?.id && users[0]?.id),
@@ -87,16 +97,14 @@ export default function CommonModal({
           image: image && image,
         }
       );
-      // setLoading(false);
-      console.log(res);
+      setLoading(false);
       setEditMode(false);
       showMessage({
         message: "User updated successfully",
         type: "info",
       });
     } catch (err) {
-      // setLoading(false);
-      console.log(err);
+      setLoading(false);
       showMessage({
         message: "Something went wrong",
         type: "danger",
@@ -142,9 +150,9 @@ export default function CommonModal({
                 <Text>Age :{users[0]?.age}</Text>
                 <Text>Gender : {users[0]?.gender}</Text>
               </View>
-              <Pressable onPress={handleLogout}>
-                <Button title={"Logout"} />
-              </Pressable>
+              <View>
+                <Button title={"Logout"} onPress={handleLogout} />
+              </View>
             </View>
           ) : (
             <View>
@@ -220,9 +228,13 @@ export default function CommonModal({
                   </Pressable>
                 );
               })}
-              <View style={{ marginVertical: 20 }}>
-                <Button title={"Update"} onPress={handleUpdate} />
-              </View>
+              {loading ? (
+                <ActivityIndicator size="large" color={"blue"} />
+              ) : (
+                <View style={{ marginVertical: 20 }}>
+                  <Button title={"Update"} onPress={handleUpdate} />
+                </View>
+              )}
             </View>
           )}
         </View>
