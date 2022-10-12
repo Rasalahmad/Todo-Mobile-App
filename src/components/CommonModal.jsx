@@ -177,19 +177,6 @@ export default function CommonModal({
                     source={require("../../assets/avatar.png")}
                   />
                 )}
-                {/* {users[0]?.image ? (
-                  <Image
-                    style={styles.avatar}
-                    source={{
-                      uri: users[0]?.image,
-                    }}
-                  />
-                ) : (
-                  <Image
-                    style={styles.avatar}
-                    source={require("../../assets/avatar.png")}
-                  />
-                )} */}
               </Pressable>
               <Input
                 placeholder={"Full Name"}
